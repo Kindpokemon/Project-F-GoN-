@@ -59,3 +59,4 @@ C:\Users\Michael\Documents\GitHub\Project F(GoN)\Temp\bin\Debug\UnityEngine.UI.x
 C:\Users\Michael\Documents\GitHub\Project F(GoN)\Temp\bin\Debug\UnityEngine.Networking.xml
 C:\Users\Michael\Documents\GitHub\Project F(GoN)\obj\Debug\Assembly-CSharp-firstpass.dll
 C:\Users\Michael\Documents\GitHub\Project F(GoN)\obj\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\Michael\Documents\GitHub\Project-F-GoN-\obj\Debug\Assembly-CSharp-firstpass.csprojResolveAssemblyReference.cache

@@ -1,8 +1,10 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerControls\PlayerControls.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\CharacterLoading\Attack.cs">
     <Files>
-      <File FileName="Assets\Scripts\PlayerControls\PlayerControls.cs" Line="74" Column="4" />
+      <File FileName="Assets\Scripts\PlayerControls\PlayerControls.cs" Line="41" Column="29" />
+      <File FileName="Assets\Scripts\CharacterLoading\CharacterStats.cs" Line="9" Column="38" />
+      <File FileName="Assets\Scripts\CharacterLoading\Attack.cs" Line="19" Column="26" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

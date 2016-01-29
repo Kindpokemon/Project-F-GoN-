@@ -22,9 +22,23 @@ public class PlayerControls : MonoBehaviour {
 	public bool jumping;
 	public int jumps;
 	public int timesJumped;
+	public bool gravityEnabled;
+	public CharacterStats characterStats;
 
 	void Start(){
 		rbody = this.GetComponent<Rigidbody2D> ();
+		//Transfer stats to character
+		walkSpeed = characterStats.walkSpeed;
+		runsSpeed = characterStats.runSpeed;
+		crouchSpeed = characterStats.crouchSpeed;
+		acceleration = characterStats.acceleration;
+		jump = characterStats.jumpHeight;
+		dJump = characterStats.dJumpHeight;
+		gravity = characterStats.gravity;
+		jumps = characterStats.jumps;
+		//Enable movement (for debug purposes)
+		gravityEnabled = true;
+		velocity = new Vector2 ();
 	}
 
 
@@ -48,7 +62,7 @@ public class PlayerControls : MonoBehaviour {
 
 			velocity.y = dJump/2;
 			timesJumped++;
-			if (timesJumped >= jumps-1) {
+			if (timesJumped >= jumps) {
 				canDJump = false;
 			}
 		}
@@ -61,10 +75,12 @@ public class PlayerControls : MonoBehaviour {
 			if (Input.GetKeyDown (KeyCode.Space)) {
 				velocity.y = jump/2;//*(Time.deltaTime);
 				canDJump = true;
+				timesJumped++;
 			}
 		}
-
-		velocity.y -= (gravity/1F) * Time.deltaTime;
+		if (gravityEnabled) {
+			velocity.y -= (gravity / 1F) * Time.deltaTime;
+		}
 		rbody.AddForce (velocity*Time.deltaTime*50000);
 
 	}
@@ -79,6 +95,7 @@ public class PlayerControls : MonoBehaviour {
 	void OnCollisionExit2D(Collision2D coll){
 		if(coll.gameObject.tag == "Stage"){
 			isGrounded = false;
+			canDJump = true;
 		}
 	}
 }
