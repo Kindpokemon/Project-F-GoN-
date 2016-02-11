@@ -75,7 +75,7 @@ public class PlayerControls : MonoBehaviour {
 			if (Input.GetKeyDown (KeyCode.Space)) {
 				velocity.y = jump/2;//*(Time.deltaTime);
 				canDJump = true;
-				timesJumped++;
+				//timesJumped++;
 			}
 		}
 		if (gravityEnabled) {
@@ -88,7 +88,7 @@ public class PlayerControls : MonoBehaviour {
 	void OnCollisionEnter2D(Collision2D coll){
 		if(coll.gameObject.tag == "Stage" && !jumping){
 			isGrounded = true;
-			timesJumped = 0;
+			timesJumped = 1;
 		}
 	}
 
