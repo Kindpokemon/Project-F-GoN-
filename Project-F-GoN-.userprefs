@@ -1,10 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\TitleScreen\TitleScreen.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerControls\PlayerControls.cs">
     <Files>
-      <File FileName="Assets\Scripts\PlayerControls\PlayerControls.cs" Line="76" Column="24" />
+      <File FileName="Assets\Scripts\PlayerControls\PlayerControls.cs" Line="66" Column="3" />
+      <File FileName="Assets\Scripts\TitleScreen\TitleScreen.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\CharacterLoading\Attack.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\TitleScreen\TitleScreen.cs" Line="10" Column="12" />
+      <File FileName="Assets\Scripts\CameraStuff\BattleCamera.cs" Line="28" Column="32" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

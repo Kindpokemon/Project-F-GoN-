@@ -16,15 +16,17 @@ public class BattleCamera : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		foreach (GameObject clone in GameObject.FindGameObjectsWithTag("Player")) {
+			if (clone.name == "Sans(Clone)") {
+				GameObject.Destroy (clone);
+			}
+		}
 		players.AddRange(GameObject.FindGameObjectsWithTag("Player"));
-		playerCount = GameObject.FindGameObjectsWithTag ("Player").Length;
+		playerCount = players.Count;
 		Debug.Log (players.Count + ", ");
-		for (int i = players.Count; i < 4; i++) {
-			Debug.Log (i);
+		while (players.Count != 4) {
 			players.Add(new GameObject());
 		}
-
-		myCam = GetComponent<Camera> ();
 	}
 	
 	// Update is called once per frame
@@ -42,7 +44,7 @@ public class BattleCamera : MonoBehaviour {
 			player4 = players [3].transform.position;
 		}
 		cameraLocation.x = (player1.x+player2.x+player3.x+player4.x)/playerCount;
-		cameraLocation.y = (player1.y+player2.y+player3.y+player4.y)/playerCount;
+		cameraLocation.y = ((player1.y+player2.y+player3.y+player4.y)/playerCount)+1;
 		cameraLocation.z = distanceAway;
 
 		myCam.transform.position = Vector3.Lerp (myCam.transform.position, cameraLocation, 1f);

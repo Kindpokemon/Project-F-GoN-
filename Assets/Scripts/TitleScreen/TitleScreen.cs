@@ -12,7 +12,7 @@ public class TitleScreen : MonoBehaviour {
 	public Menu currentMenu;
 
 	public Texture2D buttonTexture;
-	public Texture2D
+	//public Texture2D
 
 	void OnGUI(){
 
