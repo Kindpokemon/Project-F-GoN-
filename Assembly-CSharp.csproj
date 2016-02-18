@@ -52,7 +52,10 @@
      <Compile Include="Assets\Scripts\CharacterLoading\NonAttack.cs" />
      <Compile Include="Assets\Scripts\CharacterLoading\StatCrate.cs" />
      <Compile Include="Assets\Scripts\Physics2DExtensions.cs" />
+     <Compile Include="Assets\Scripts\PlayerControls\AttackAction.cs" />
+     <Compile Include="Assets\Scripts\PlayerControls\JumpScript.cs" />
      <Compile Include="Assets\Scripts\PlayerControls\PlayerControls.cs" />
+     <Compile Include="Assets\Scripts\StageMechanics\LightRotate.cs" />
      <Compile Include="Assets\Scripts\StageMechanics\Respawn.cs" />
      <Compile Include="Assets\Scripts\TitleScreen\TitleScreen.cs" />
  <Reference Include="UnityEngine.UI">
