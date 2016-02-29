@@ -1,10 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\StageMechanics\LightRotate.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerControls\AttackAction.cs">
     <Files>
       <File FileName="Assets\Scripts\StageMechanics\LightRotate.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerControls\PlayerControls.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerControls\JumpScript.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerControls\PlayerControls.cs" Line="113" Column="52" />
+      <File FileName="Assets\Scripts\PlayerControls\AttackAction.cs" Line="157" Column="31" />
+      <File FileName="Assets\Scripts\CharacterLoading\Attack.cs" Line="17" Column="15" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

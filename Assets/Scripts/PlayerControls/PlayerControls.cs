@@ -38,6 +38,13 @@ public class PlayerControls : MonoBehaviour {
 	public bool attacking;
 	public bool canAttack;
 
+	bool sprint;
+	bool detectcrouch;
+	bool detectjump;
+	bool bigJump;
+	float getHor;
+	float getVer;
+
 	///Numbers 
 	public float crouchNum;
 	public Vector2 movement_vector;
@@ -68,8 +75,7 @@ public class PlayerControls : MonoBehaviour {
 		canAttack = true;
 	}
 
-
-	void FixedUpdate(){
+	void Update(){
 		//Taunts//
 		if (!attacking) {
 			if (Input.GetButtonDown ("UpTaunt") && isGrounded) {
@@ -82,27 +88,38 @@ public class PlayerControls : MonoBehaviour {
 				StartCoroutine (attackAction.Taunt ("down"));
 			}
 		}
+		//Controls//
+		detectcrouch = Input.GetButtonDown("Crouch");
+		sprint = Input.GetButtonDown ("Sprint");
+		detectjump = Input.GetButtonDown ("Jump");
+
+		crouchNum = Input.GetAxisRaw("Vertical");
+		movement_vector = new Vector2 (Input.GetAxisRaw ("Horizontal"), 0);
+		getHor = Input.GetAxisRaw ("Horizontal");
+		getVer = Input.GetAxisRaw ("Vertical");
+	}
+
+	void FixedUpdate(){
+		
 		//Horizontal Movement//
 		playerPos.x = rbody.position.x;
 		// Read the inputs.
-		crouchNum = Input.GetAxisRaw("Vertical");
 		if (crouchNum == -1) {
 			crouch = true;
 		} else {
 			crouch = false;
 		}
-		movement_vector = new Vector2 (Input.GetAxisRaw ("Horizontal"), 0);
 
-		if (movement_vector != Vector2.zero) {
+		if (movement_vector != Vector2.zero && !attacking) {
 			anim.SetBool ("isWalking", true);
 		} else {
 			anim.SetBool ("isWalking", false);
 		}
 		if (!attacking) {
-			if (Input.GetAxisRaw ("Horizontal") != 0 || Input.GetAxisRaw ("Vertical") != 0) {
-				if (Input.GetAxisRaw ("Horizontal") == 1) {
+			if (getHor != 0 || getVer != 0) {
+				if (getHor == 1) {
 					facingNum = 1;
-				} else if (Input.GetAxisRaw ("Horizontal") == -1) {
+				} else if (getHor == -1) {
 					facingNum = -1;
 				}
 				moving = true;
@@ -117,12 +134,12 @@ public class PlayerControls : MonoBehaviour {
 			GetComponent<SpriteRenderer> ().flipX = true;
 		}
 		// Pass all parameters to the character control script.
-		if (Input.GetButton ("Sprint") && PlayerControl && canWalk && !crouch && isGrounded && !attacking) {
+		if (sprint && PlayerControl && canWalk && !crouch && isGrounded && !attacking) {
 			rbody.MovePosition (rbody.position + (movement_vector * runsSpeed * (Time.deltaTime / 2)));
 			anim.SetBool ("isRunning", true);
 			anim.SetBool ("isCrawling", false);
 			Debug.Log ("Sprint");
-		} else if (Input.GetButton ("Crouch") && PlayerControl && canCrawl && crouch && isGrounded && !attacking) {
+		} else if (crouch && PlayerControl && canCrawl && crouch && isGrounded && !attacking) {
 			anim.SetBool ("isCrawling", true);
 			anim.SetBool ("isRunning", false);
 			Debug.Log ("Crouch");
@@ -149,7 +166,7 @@ public class PlayerControls : MonoBehaviour {
 			canJump = true;
 		}
 
-		if (Input.GetButton("Crouch") && isGrounded) {
+		if (crouch && isGrounded) {
 			crouch = true;
 			anim.SetBool ("isCrouching", true);
 
@@ -158,7 +175,7 @@ public class PlayerControls : MonoBehaviour {
 			anim.SetBool ("isCrouching", false);
 		}
 
-		if (canDJump == true && (Input.GetButtonDown("Jump") || Input.GetButtonDown("BigJump")) && PlayerControl && canJump) {
+		if (canDJump == true && (detectjump || bigJump) && PlayerControl && canJump) {
 
 			velocity.y = dJump/2;
 			timesJumped++;
@@ -173,7 +190,7 @@ public class PlayerControls : MonoBehaviour {
 			//velocity *= jump;
 			anim.SetBool ("IsJumping", false);
 
-			if (Input.GetButtonDown ("Jump") && canJump && PlayerControl) {
+			if (detectjump && canJump && PlayerControl) {
 				velocity.y = jump / 2;//*(Time.deltaTime);
 				canDJump = true;
 				//timesJumped++;

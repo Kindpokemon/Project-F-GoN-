@@ -12,17 +12,19 @@ public class Attack {
 	public int maxDamage;
 	public float chargetime;
 	public bool disgruntles;
-	public int attackTimes;
 
 	//Object Info
-	public GameObject[] AttackObjects;
+	public Object[] AttackObjects;
 	public Vector2[] hitboxSizes;
 	public Vector2[] hitboxPositions;//Also used for moving projectiles
 	public float[] betweenWaits;
 	public float[] moveSpeeds;
+	public List<Quaternion> objectRotation;
 
 	//For Multiattacks
 	public int maxPresses;
+	public int attackTimes;
+	public int finalDamage;
 
 	//If Stuns
 	public int maxStun;
@@ -35,6 +37,6 @@ public class Attack {
 
 
 	public Attack(){
-
+		
 	}
 }
