@@ -12,6 +12,7 @@ public class Attack {
 	public int maxDamage;
 	public float chargetime;
 	public bool disgruntles;
+	public string animName;
 
 	//Object Info
 	public Object[] AttackObjects;

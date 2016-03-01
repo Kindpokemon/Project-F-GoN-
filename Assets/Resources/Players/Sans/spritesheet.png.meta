@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 638c826a578dc3a4099efc8d17776d50
-timeCreated: 1455742744
+timeCreated: 1456793577
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -19,6 +19,7 @@ TextureImporter:
     21300024: spritesheet_12
     21300026: spritesheet_13
     21300028: spritesheet_14
+    21300030: spritesheet_15
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -343,15 +344,14 @@ TextureImporter:
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline:
-      - - {x: -24.5, y: 60.599976}
-        - {x: -82.5, y: 45.599976}
-        - {x: -82.5, y: -43.400024}
-        - {x: -75.5, y: -57.400024}
-        - {x: 38.5, y: -57.400024}
-        - {x: 39.5, y: -56.400024}
-        - {x: 43.5, y: -49.400024}
-        - {x: 43.5, y: 31.599976}
-        - {x: 29.5, y: 60.599976}
+      - - {x: -59.5, y: 60.599976}
+        - {x: -82.5, y: 53.599976}
+        - {x: -82.5, y: -8.400024}
+        - {x: -42.5, y: -59.400024}
+        - {x: 40.5, y: -59.400024}
+        - {x: 43.5, y: -31.400024}
+        - {x: 43.5, y: 50.599976}
+        - {x: 42.5, y: 60.599976}
     - name: spritesheet_14
       rect:
         serializedVersion: 2
@@ -371,6 +371,26 @@ TextureImporter:
         - {x: 44.800003, y: -41.400024}
         - {x: 44.800003, y: 18.599976}
         - {x: 24.800003, y: 60.599976}
+    - name: spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1792
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 19.600006, y: 60.599976}
+        - {x: -27.399994, y: 60.599976}
+        - {x: -43.399994, y: 19.599976}
+        - {x: -43.399994, y: -47.400024}
+        - {x: -39.399994, y: -59.400024}
+        - {x: 43.600006, y: -59.400024}
+        - {x: 44.600006, y: -55.400024}
+        - {x: 44.600006, y: 26.599976}
+        - {x: 34.600006, y: 55.599976}
     outline: []
   spritePackingTag: 
   userData: 

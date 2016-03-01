@@ -41,7 +41,7 @@ public class PlayerControls : MonoBehaviour {
 	bool sprint;
 	bool detectcrouch;
 	bool detectjump;
-	bool bigJump;
+	//bool bigJump;
 	float getHor;
 	float getVer;
 
@@ -92,11 +92,10 @@ public class PlayerControls : MonoBehaviour {
 		detectcrouch = Input.GetButtonDown("Crouch");
 		sprint = Input.GetButtonDown ("Sprint");
 		detectjump = Input.GetButtonDown ("Jump");
-
-		crouchNum = Input.GetAxisRaw("Vertical");
 		movement_vector = new Vector2 (Input.GetAxisRaw ("Horizontal"), 0);
 		getHor = Input.GetAxisRaw ("Horizontal");
 		getVer = Input.GetAxisRaw ("Vertical");
+		crouchNum = getVer;
 	}
 
 	void FixedUpdate(){
@@ -166,7 +165,7 @@ public class PlayerControls : MonoBehaviour {
 			canJump = true;
 		}
 
-		if (crouch && isGrounded) {
+		if (crouch && isGrounded && !attacking) {
 			crouch = true;
 			anim.SetBool ("isCrouching", true);
 
@@ -175,7 +174,7 @@ public class PlayerControls : MonoBehaviour {
 			anim.SetBool ("isCrouching", false);
 		}
 
-		if (canDJump == true && (detectjump || bigJump) && PlayerControl && canJump) {
+		if (canDJump == true && (detectjump) && PlayerControl && canJump) {
 
 			velocity.y = dJump/2;
 			timesJumped++;

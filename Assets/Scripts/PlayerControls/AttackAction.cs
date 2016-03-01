@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AttackAction : MonoBehaviour {
 
@@ -21,10 +22,12 @@ public class AttackAction : MonoBehaviour {
 		//Downs
 		CrouchSwipe,
 		CrouchSummon,
+		CrouchWave,
 		Teleport,
 		//Sides
 		Grab,
-
+		Slash,
+		Charge,
 		//Grabstuff
 		Fthrow,
 		Bthrow,
@@ -62,10 +65,12 @@ public class AttackAction : MonoBehaviour {
 				} else {
 					if (playerControls.characterStats.moveSet [1].attackType == AttackTypes.ComboPunch && playerControls.isGrounded) {
 						StartCoroutine (ComboPunch (playerControls.characterStats.moveSet [1]));
-						stopClockA = true;
+						stopClockA = false;
+						timeHeld = 0;
 					} else if (playerControls.characterStats.moveSet [1].attackType == AttackTypes.ComboSummon && playerControls.isGrounded) {
 						StartCoroutine (ComboSummon (playerControls.characterStats.moveSet [1]));
-						stopClockA = true;
+						stopClockA = false;
+						timeHeld = 0;
 					}
 
 				}
@@ -80,21 +85,25 @@ public class AttackAction : MonoBehaviour {
 					} else if (Input.GetAxisRaw ("Vertical") == 1) {
 
 					} else if (Input.GetAxisRaw ("Vertical") == -1) {
-
+						if (playerControls.characterStats.moveSet [5].attackType == AttackTypes.CrouchWave && playerControls.isGrounded) {
+							StartCoroutine (CrouchWave (playerControls.characterStats.moveSet [5]));
+							stopClockA = false;
+							timeHeld = 0;
+						}
 					} else {
 						if (playerControls.characterStats.moveSet [0].attackType == AttackTypes.ComboPunch && playerControls.isGrounded) {
 							StartCoroutine (ComboPunch (playerControls.characterStats.moveSet [0]));
-							stopClockA = true;
+							stopClockA = false;
+							timeHeld = 0;
 						} else if (playerControls.characterStats.moveSet [0].attackType == AttackTypes.ComboSummon && playerControls.isGrounded) {
-							Debug.Log ("Shouldwork...");
 							StartCoroutine (ComboSummon (playerControls.characterStats.moveSet [0]));
-							stopClockA = true;
+							stopClockA = false;
+							timeHeld = 0;
 						}
 
 					}
 				}
-				timeHeld = 0;
-				stopClockA = false;
+
 
 
 			}
@@ -139,10 +148,11 @@ public class AttackAction : MonoBehaviour {
 	}
 
 	public IEnumerator ComboPunch(Attack attack){
-		return null;
+		yield break;
 	}
 
 	public IEnumerator ComboSummon(Attack attack){
+		playerControls.anim.Play (attack.animName);
 		playerControls.attacking = true;
 		attacking = true;
 		if (attack.attackTimes > 1) {
@@ -154,8 +164,8 @@ public class AttackAction : MonoBehaviour {
 				g.SetActive (true);
 				for (int j = 0; j < attack.hitboxPositions.Length; j++) {
 					g.transform.localPosition = Vector2.Lerp (g.transform.localPosition, new Vector2(attack.hitboxPositions [j].x * -(playerControls.facingNum),attack.hitboxPositions[j].y), 1);
-					g.transform.localRotation = Quaternion.Lerp(g.transform.localRotation, new Quaternion (g.transform.localRotation.x, g.transform.localRotation.y, g.transform.localRotation.z + attack.objectRotation [j].z * -(playerControls.facingNum),0),1);
-					Debug.Log (new Quaternion (g.transform.localRotation.x, g.transform.localRotation.y, g.transform.localRotation.z + attack.objectRotation [j].z * -(playerControls.facingNum),0));
+					g.transform.localRotation = Quaternion.Euler(g.transform.localRotation.x,g.transform.localRotation.y,(g.transform.rotation.z + attack.objectRotation [j].z) * -(playerControls.facingNum));
+					//Debug.Log (new Quaternion (g.transform.localRotation.x, g.transform.localRotation.y, g.transform.localRotation.z + attack.objectRotation [j].z * -(playerControls.facingNum),0));
 					yield return new WaitForSeconds (attack.betweenWaits [j]);
 				}
 				if (i >= attack.attackTimes) {
@@ -165,6 +175,7 @@ public class AttackAction : MonoBehaviour {
 				}
 				Destroy (g);
 			}
+			playerControls.anim.SetTrigger ("AttackEnd");
 		} else if (attack.attackTimes == 1) {
 			GameObject g = (GameObject)Instantiate (attack.AttackObjects[0]);
 			g.transform.SetParent (playerControls.gameObject.transform);
@@ -173,8 +184,8 @@ public class AttackAction : MonoBehaviour {
 			for (int i = 0; i < attack.hitboxPositions.Length; i++) {
 				g.transform.localPosition = Vector2.Lerp (g.transform.localPosition, new Vector2(attack.hitboxPositions [i].x * -(playerControls.facingNum),attack.hitboxPositions[i].y), 1);
 				yield return new WaitForSeconds (attack.betweenWaits [i]);
-				Debug.Log ("Spem?");
 			}
+			playerControls.anim.SetTrigger ("AttackEnd");
 			Destroy (g);
 		} else {
 			Debug.Log ("Attack Failed");
@@ -186,7 +197,31 @@ public class AttackAction : MonoBehaviour {
 
 	public IEnumerator ChargeUp(Attack attack){
 
-		return null;
+		yield break;
 	}
 
+	public IEnumerator CrouchWave(Attack attack){
+		playerControls.anim.Play (attack.animName);
+		playerControls.attacking = true;
+		attacking = true;
+		List<GameObject> attackTimes = new List<GameObject>();
+		for(int i = 0; i < attack.attackTimes; i++){
+			GameObject g = (GameObject)Instantiate (attack.AttackObjects [i]);
+			attackTimes.Add (g);
+			g.transform.SetParent (playerControls.gameObject.transform);
+			g.transform.localPosition = Vector2.zero;
+			g.SetActive (true);
+			g.transform.localPosition = Vector2.Lerp (g.transform.localPosition, new Vector2(attack.hitboxPositions [i].x * (playerControls.facingNum),attack.hitboxPositions[i].y), 1);
+			g.transform.localRotation = Quaternion.Euler(g.transform.localRotation.x,g.transform.localRotation.y,(g.transform.rotation.z + attack.objectRotation [i].z) * -(playerControls.facingNum));
+			yield return new WaitForSeconds (attack.betweenWaits [i]);
+		}
+		for (int j = 0; j < attackTimes.Count; j++) {
+			Destroy (attackTimes [j]);
+			yield return new WaitForSeconds (attack.betweenWaits [j]);
+		}
+		playerControls.anim.SetTrigger ("AttackEnd");
+		attacking = false;
+		playerControls.attacking = false;
+		yield break;
+	}
 }
