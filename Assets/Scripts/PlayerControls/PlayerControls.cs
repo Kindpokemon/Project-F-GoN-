@@ -96,64 +96,8 @@ public class PlayerControls : MonoBehaviour {
 		getHor = Input.GetAxisRaw ("Horizontal");
 		getVer = Input.GetAxisRaw ("Vertical");
 		crouchNum = getVer;
-	}
 
-	void FixedUpdate(){
-		
-		//Horizontal Movement//
-		playerPos.x = rbody.position.x;
-		// Read the inputs.
-		if (crouchNum == -1) {
-			crouch = true;
-		} else {
-			crouch = false;
-		}
-
-		if (movement_vector != Vector2.zero && !attacking) {
-			anim.SetBool ("isWalking", true);
-		} else {
-			anim.SetBool ("isWalking", false);
-		}
-		if (!attacking) {
-			if (getHor != 0 || getVer != 0) {
-				if (getHor == 1) {
-					facingNum = 1;
-				} else if (getHor == -1) {
-					facingNum = -1;
-				}
-				moving = true;
-			} else {
-				moving = false;
-			}
-		}
-
-		if (facingNum == -1) {
-			GetComponent<SpriteRenderer> ().flipX = false;
-		} else if (facingNum == 1) {
-			GetComponent<SpriteRenderer> ().flipX = true;
-		}
-		// Pass all parameters to the character control script.
-		if (sprint && PlayerControl && canWalk && !crouch && isGrounded && !attacking) {
-			rbody.MovePosition (rbody.position + (movement_vector * runsSpeed * (Time.deltaTime / 2)));
-			anim.SetBool ("isRunning", true);
-			anim.SetBool ("isCrawling", false);
-			Debug.Log ("Sprint");
-		} else if (crouch && PlayerControl && canCrawl && crouch && isGrounded && !attacking) {
-			anim.SetBool ("isCrawling", true);
-			anim.SetBool ("isRunning", false);
-			Debug.Log ("Crouch");
-			//rbody.MovePosition (rbody.position + (movement_vector * crouchSpeed * (Time.deltaTime / 2)));
-		} else if (PlayerControl && canWalk && !crouch && isGrounded && !attacking) {
-			anim.SetBool ("isRunning", false);
-			anim.SetBool ("isCrawling", false);
-			rbody.MovePosition (rbody.position + (movement_vector * walkSpeed * (Time.deltaTime / 2)));
-		} else if (!canCrawl && isGrounded && crouch) {
-			rbody.MovePosition (new Vector2 (rbody.position.x, rbody.position.y + (movement_vector.y * walkSpeed * (Time.deltaTime / 2F))));
-		} else if(attacking){
-			rbody.MovePosition (new Vector2 (rbody.position.x, rbody.position.y + (movement_vector.y * walkSpeed * (Time.deltaTime / 2F))));
-		} else {
-			rbody.MovePosition (rbody.position + (movement_vector * walkSpeed * (Time.deltaTime / 2F)));
-		}
+		//Physics Calc
 
 		if (crouch) {
 			canWalk = false;
@@ -183,6 +127,65 @@ public class PlayerControls : MonoBehaviour {
 			}
 		}
 
+		if (crouchNum == -1) {
+			crouch = true;
+		} else {
+			crouch = false;
+		}
+
+		if (movement_vector != Vector2.zero && !attacking) {
+			anim.SetBool ("isWalking", true);
+		} else {
+			anim.SetBool ("isWalking", false);
+		}
+		if (!attacking) {
+			if (getHor != 0 || getVer != 0) {
+				if (getHor == 1) {
+					facingNum = 1;
+				} else if (getHor == -1) {
+					facingNum = -1;
+				}
+				moving = true;
+			} else {
+				moving = false;
+			}
+		}
+
+		if (facingNum == -1) {
+			GetComponent<SpriteRenderer> ().flipX = false;
+		} else if (facingNum == 1) {
+			GetComponent<SpriteRenderer> ().flipX = true;
+		}
+	}
+
+	void FixedUpdate(){
+		
+		//Horizontal Movement//
+		playerPos.x = rbody.position.x;
+
+		// Pass all parameters to the character control script.
+		if (sprint && PlayerControl && canWalk && !crouch && isGrounded && !attacking) {
+			rbody.MovePosition (rbody.position + (movement_vector * runsSpeed * (Time.deltaTime / 2)));
+			anim.SetBool ("isRunning", true);
+			anim.SetBool ("isCrawling", false);
+			Debug.Log ("Sprint");
+		} else if (crouch && PlayerControl && canCrawl && crouch && isGrounded && !attacking) {
+			anim.SetBool ("isCrawling", true);
+			anim.SetBool ("isRunning", false);
+			Debug.Log ("Crouch");
+			//rbody.MovePosition (rbody.position + (movement_vector * crouchSpeed * (Time.deltaTime / 2)));
+		} else if (PlayerControl && canWalk && !crouch && isGrounded && !attacking) {
+			anim.SetBool ("isRunning", false);
+			anim.SetBool ("isCrawling", false);
+			rbody.MovePosition (rbody.position + (movement_vector * walkSpeed * (Time.deltaTime / 2)));
+		} else if (!canCrawl && isGrounded && crouch) {
+			rbody.MovePosition (new Vector2 (rbody.position.x, rbody.position.y + (movement_vector.y * walkSpeed * (Time.deltaTime / 2F))));
+		} else if(attacking){
+			rbody.MovePosition (new Vector2 (rbody.position.x, rbody.position.y + (movement_vector.y * walkSpeed * (Time.deltaTime / 2F))));
+		} else {
+			rbody.MovePosition (rbody.position + (movement_vector * walkSpeed * (Time.deltaTime / 2F)));
+		}
+
 		if (isGrounded) {
 			velocity = new Vector3 (0, 0, 0);
 			velocity = transform.TransformDirection (velocity);
@@ -206,7 +209,19 @@ public class PlayerControls : MonoBehaviour {
 	}
 		
 	void OnCollisionEnter2D(Collision2D coll){
-		if(coll.gameObject.tag == "Stage" && !jumping){
+		
+		Collider2D collider = coll.collider;
+		bool top = false;
+		Debug.Log (coll.gameObject + ""+ collider.name);
+
+		if (collider.tag == "Stage") {
+			float angle = Vector2.Angle(collider coll.transform.position);
+			if(Mathf.Approximately(angle, 0))// back
+			if(Mathf.Approximately(angle, 180))// front
+			if(Mathf.Approximately(angle, 90)){
+		}
+
+		if(coll.gameObject.tag == "Stage" && !jumping && top){
 			isGrounded = true;
 			anim.SetBool ("grounded", true);
 			timesJumped = 1;

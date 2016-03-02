@@ -22,8 +22,12 @@ public class AttackAction : MonoBehaviour {
 		//Downs
 		CrouchSwipe,
 		CrouchSummon,
+		CrouchUp,
 		CrouchWave,
 		Teleport,
+		//Ups
+		UpPunch,
+		UpSummon,
 		//Sides
 		Grab,
 		Slash,
@@ -87,6 +91,10 @@ public class AttackAction : MonoBehaviour {
 					} else if (Input.GetAxisRaw ("Vertical") == -1) {
 						if (playerControls.characterStats.moveSet [5].attackType == AttackTypes.CrouchWave && playerControls.isGrounded) {
 							StartCoroutine (CrouchWave (playerControls.characterStats.moveSet [5]));
+							stopClockA = false;
+							timeHeld = 0;
+						} else if (playerControls.characterStats.moveSet [5].attackType == AttackTypes.CrouchSummon && playerControls.isGrounded) {
+							StartCoroutine (CrouchSummon (playerControls.characterStats.moveSet [5], 0, "Normal"));
 							stopClockA = false;
 							timeHeld = 0;
 						}
@@ -176,6 +184,7 @@ public class AttackAction : MonoBehaviour {
 				Destroy (g);
 			}
 			playerControls.anim.SetTrigger ("AttackEnd");
+			playerControls.anim.ResetTrigger ("AttackEnd");
 		} else if (attack.attackTimes == 1) {
 			GameObject g = (GameObject)Instantiate (attack.AttackObjects[0]);
 			g.transform.SetParent (playerControls.gameObject.transform);
@@ -186,6 +195,7 @@ public class AttackAction : MonoBehaviour {
 				yield return new WaitForSeconds (attack.betweenWaits [i]);
 			}
 			playerControls.anim.SetTrigger ("AttackEnd");
+			playerControls.anim.ResetTrigger ("AttackEnd");
 			Destroy (g);
 		} else {
 			Debug.Log ("Attack Failed");
@@ -199,6 +209,8 @@ public class AttackAction : MonoBehaviour {
 
 		yield break;
 	}
+
+	//Crouch////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public IEnumerator CrouchWave(Attack attack){
 		playerControls.anim.Play (attack.animName);
@@ -219,6 +231,44 @@ public class AttackAction : MonoBehaviour {
 			Destroy (attackTimes [j]);
 			yield return new WaitForSeconds (attack.betweenWaits [j]);
 		}
+		playerControls.anim.SetTrigger ("AttackEnd");
+		attacking = false;
+		playerControls.attacking = false;
+		yield break;
+	}
+
+	public IEnumerator CrouchSummon(Attack attack, float chargetime, string keyType){
+		float finalAttack = attack.minDamage;
+		playerControls.anim.Play (attack.animName);
+		playerControls.attacking = true;
+		attacking = true;
+		GameObject g = (GameObject)Instantiate (attack.AttackObjects [0]);
+		GameObject h = (GameObject)Instantiate (attack.AttackObjects [1]);
+		g.transform.SetParent (playerControls.gameObject.transform);
+		h.transform.SetParent (playerControls.gameObject.transform);
+		g.transform.localPosition = Vector2.zero;
+		h.transform.localPosition = Vector2.zero;
+		g.SetActive (true);
+		h.SetActive (true);
+		if (chargetime > 0 && Input.GetButton (keyType)) {
+			for (int i = 0; i < chargetime; i++) {
+				if (Input.GetButtonUp (keyType)) {
+					break;
+				}
+				if (finalAttack < attack.maxDamage)
+					finalAttack = finalAttack + .1f;
+				yield return new WaitForSeconds (0.1f);
+			}
+				
+		}
+		playerControls.anim.Play (attack.animName);
+		for (int i = 0; i < attack.hitboxPositions.Length; i++) {
+			g.transform.localPosition = Vector2.Lerp (g.transform.localPosition, new Vector2 (attack.hitboxPositions [i].x * -(playerControls.facingNum), attack.hitboxPositions [i].y), 1);
+			h.transform.localPosition = Vector2.Lerp (g.transform.localPosition, new Vector2 (attack.hitboxPositions [i].x * (playerControls.facingNum), attack.hitboxPositions [i].y), 1);
+			yield return new WaitForSeconds (attack.betweenWaits [i]);
+		}
+		Destroy (g);
+		Destroy (h);
 		playerControls.anim.SetTrigger ("AttackEnd");
 		attacking = false;
 		playerControls.attacking = false;

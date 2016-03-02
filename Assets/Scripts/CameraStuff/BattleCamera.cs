@@ -17,7 +17,7 @@ public class BattleCamera : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		foreach (GameObject clone in GameObject.FindGameObjectsWithTag("Player")) {
-			if (clone.name == "Sans(Clone)") {
+			if (clone.name.Contains("(Clone)")) {
 				GameObject.Destroy (clone);
 			}
 		}
