@@ -1,10 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerControls\PlayerControls.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PlayerControls\AttackAction.cs">
     <Files>
-      <File FileName="Assets\Scripts\CameraStuff\BattleCamera.cs" Line="32" Column="36" />
-      <File FileName="Assets\Scripts\PlayerControls\AttackAction.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\PlayerControls\PlayerControls.cs" Line="218" Column="40" />
+      <File FileName="Assets\Scripts\PlayerControls\PlayerControls.cs" Line="211" Column="22" />
+      <File FileName="Assets\Scripts\StageMechanics\StageMechanics.cs" Line="6" Column="26" />
+      <File FileName="Assets\Scripts\CameraStuff\BattleCamera.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\PlayerControls\AttackAction.cs" Line="186" Column="49" />
       <File FileName="Assets\Scripts\StageMechanics\LightRotate.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\CharacterLoading\Attack.cs" Line="1" Column="1" />
     </Files>

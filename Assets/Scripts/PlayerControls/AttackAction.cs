@@ -184,7 +184,6 @@ public class AttackAction : MonoBehaviour {
 				Destroy (g);
 			}
 			playerControls.anim.SetTrigger ("AttackEnd");
-			playerControls.anim.ResetTrigger ("AttackEnd");
 		} else if (attack.attackTimes == 1) {
 			GameObject g = (GameObject)Instantiate (attack.AttackObjects[0]);
 			g.transform.SetParent (playerControls.gameObject.transform);
@@ -195,7 +194,6 @@ public class AttackAction : MonoBehaviour {
 				yield return new WaitForSeconds (attack.betweenWaits [i]);
 			}
 			playerControls.anim.SetTrigger ("AttackEnd");
-			playerControls.anim.ResetTrigger ("AttackEnd");
 			Destroy (g);
 		} else {
 			Debug.Log ("Attack Failed");

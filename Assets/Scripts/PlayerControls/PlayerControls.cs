@@ -208,23 +208,23 @@ public class PlayerControls : MonoBehaviour {
 
 	}
 		
-	void OnCollisionEnter2D(Collision2D coll){
+	void OnCollisionStay2D(Collision2D coll){
 		
 		Collider2D collider = coll.collider;
 		bool top = false;
-		Debug.Log (coll.gameObject + ""+ collider.name);
-
-		if (collider.tag == "Stage") {
-			float angle = Vector2.Angle(collider coll.transform.position);
-			if(Mathf.Approximately(angle, 0))// back
-			if(Mathf.Approximately(angle, 180))// front
-			if(Mathf.Approximately(angle, 90)){
-		}
-
-		if(coll.gameObject.tag == "Stage" && !jumping && top){
-			isGrounded = true;
-			anim.SetBool ("grounded", true);
-			timesJumped = 1;
+		Debug.Log (coll.contacts[0].point.y);
+		if (coll.gameObject.tag == "Stage") {
+			float stageHeight = coll.gameObject.GetComponent<StageMechanics> ().stageFloor;
+			if (coll.contacts [0].point.y >= stageHeight) {
+				top = true;
+			} else {
+				top = false;
+			}
+			if (!jumping && top) {
+				isGrounded = true;
+				anim.SetBool ("grounded", true);
+				timesJumped = 1;
+			}
 		}
 	}
 
