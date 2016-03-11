@@ -10,12 +10,14 @@ public class PlayerControls : MonoBehaviour {
 	public CharacterStats characterStats;
 	public Vector2 playerPos;
 	public Animator anim;
-	public AttackAction attackAction;
+	public AnimCombat animCombat;
 
 	//Stagestuff
 	public bool gravityEnabled;
 	public GameObject[] stageParts;
 	public bool isGrounded;
+	public GameObject attachedEdge;
+	public Vector2 edgePosition;
 
 	//Player Stats
 	public float walkSpeed;
@@ -37,10 +39,14 @@ public class PlayerControls : MonoBehaviour {
 	public bool PlayerControl;
 	public bool attacking;
 	public bool canAttack;
+	public bool edgeGrabbing;
+	public bool canBeHit;
+	public bool wasGrabbing;
 
 	bool sprint;
 	bool detectcrouch;
 	bool detectjump;
+
 	//bool bigJump;
 	float getHor;
 	float getVer;
@@ -55,7 +61,7 @@ public class PlayerControls : MonoBehaviour {
 
 	void Start(){
 		rbody = this.GetComponent<Rigidbody2D> ();
-		attackAction = this.GetComponent<AttackAction> ();
+		animCombat = this.GetComponent<AnimCombat> ();
 		//Transfer stats to character
 		walkSpeed = characterStats.walkSpeed;
 		runsSpeed = characterStats.runSpeed;
@@ -79,22 +85,31 @@ public class PlayerControls : MonoBehaviour {
 		//Taunts//
 		if (!attacking) {
 			if (Input.GetButtonDown ("UpTaunt") && isGrounded) {
-				StartCoroutine (attackAction.Taunt ("up"));
+				StartCoroutine (animCombat.Taunt ("up"));
 			}
 			if (Input.GetButtonDown ("SideTaunt") && isGrounded) {
-				StartCoroutine (attackAction.Taunt ("side"));
+				StartCoroutine (animCombat.Taunt ("side"));
 			}
 			if (Input.GetButtonDown ("DownTaunt") && isGrounded) {
-				StartCoroutine (attackAction.Taunt ("down"));
+				StartCoroutine (animCombat.Taunt ("down"));
 			}
 		}
 		//Controls//
-		detectcrouch = Input.GetButtonDown("Crouch");
-		sprint = Input.GetButtonDown ("Sprint");
-		detectjump = Input.GetButtonDown ("Jump");
-		movement_vector = new Vector2 (Input.GetAxisRaw ("Horizontal"), 0);
-		getHor = Input.GetAxisRaw ("Horizontal");
-		getVer = Input.GetAxisRaw ("Vertical");
+		if (PlayerControl) {
+			detectcrouch = Input.GetButtonDown ("Crouch");
+			sprint = Input.GetButtonDown ("Sprint");
+			detectjump = Input.GetButtonDown ("Jump");
+			movement_vector = new Vector2 (Input.GetAxisRaw ("Horizontal"), 0);
+			getHor = Input.GetAxisRaw ("Horizontal");
+			getVer = Input.GetAxisRaw ("Vertical");
+		} else {
+			detectcrouch = false;
+			sprint = false;
+			detectjump = false;
+			movement_vector = Vector2.zero;
+			getHor = 0;
+			getVer = 0;
+		}
 		crouchNum = getVer;
 
 		//Physics Calc
@@ -138,7 +153,7 @@ public class PlayerControls : MonoBehaviour {
 		} else {
 			anim.SetBool ("isWalking", false);
 		}
-		if (!attacking) {
+		if (!attacking && !edgeGrabbing && PlayerControl) {
 			if (getHor != 0 || getVer != 0) {
 				if (getHor == 1) {
 					facingNum = 1;
@@ -156,10 +171,42 @@ public class PlayerControls : MonoBehaviour {
 		} else if (facingNum == 1) {
 			GetComponent<SpriteRenderer> ().flipX = true;
 		}
+
+		EdgeHandle (attachedEdge);
+	}
+
+	void EdgeHandle(GameObject edge){
+		if (edgeGrabbing) {
+			transform.SetParent (attachedEdge.transform);
+			transform.localPosition = edgePosition;
+			canBeHit = false;
+			isGrounded = true;
+			wasGrabbing = true;
+			GetComponent<BoxCollider2D> ().enabled = false;
+			if (Input.GetButtonDown ("Jump")) {
+				EndEdge (this.GetComponent<PlayerControls> (), edge.GetComponent<EdgeGrab>());
+				velocity.y = dJump/2;
+				timesJumped++;
+			}
+		}
+	}
+
+	public static void EndEdge(PlayerControls playa , EdgeGrab edge){
+		playa.attachedEdge.GetComponent<EdgeGrab> ().occupied = false;
+		playa.edgeGrabbing = false;
+		edge.occupant = null;
+		playa.PlayerControl = true;
+		playa.isGrounded = false;
+		playa.anim.SetBool ("edgeGrabbing", false);
+		playa.GetComponent<BoxCollider2D> ().enabled = true;
+		playa.transform.SetParent (null);
+		playa.canBeHit = true;
 	}
 
 	void FixedUpdate(){
-		
+
+
+
 		//Horizontal Movement//
 		playerPos.x = rbody.position.x;
 
@@ -168,11 +215,9 @@ public class PlayerControls : MonoBehaviour {
 			rbody.MovePosition (rbody.position + (movement_vector * runsSpeed * (Time.deltaTime / 2)));
 			anim.SetBool ("isRunning", true);
 			anim.SetBool ("isCrawling", false);
-			Debug.Log ("Sprint");
 		} else if (crouch && PlayerControl && canCrawl && crouch && isGrounded && !attacking) {
 			anim.SetBool ("isCrawling", true);
 			anim.SetBool ("isRunning", false);
-			Debug.Log ("Crouch");
 			//rbody.MovePosition (rbody.position + (movement_vector * crouchSpeed * (Time.deltaTime / 2)));
 		} else if (PlayerControl && canWalk && !crouch && isGrounded && !attacking) {
 			anim.SetBool ("isRunning", false);
@@ -210,20 +255,15 @@ public class PlayerControls : MonoBehaviour {
 		
 	void OnCollisionStay2D(Collision2D coll){
 		
-		Collider2D collider = coll.collider;
-		bool top = false;
-		Debug.Log (coll.contacts[0].point.y);
 		if (coll.gameObject.tag == "Stage") {
 			float stageHeight = coll.gameObject.GetComponent<StageMechanics> ().stageFloor;
 			if (coll.contacts [0].point.y >= stageHeight) {
-				top = true;
-			} else {
-				top = false;
-			}
-			if (!jumping && top) {
-				isGrounded = true;
+				timesJumped = 0;
 				anim.SetBool ("grounded", true);
-				timesJumped = 1;
+				isGrounded = true;
+			} else {
+				anim.SetBool ("grounded", false);
+				isGrounded = false;
 			}
 		}
 	}

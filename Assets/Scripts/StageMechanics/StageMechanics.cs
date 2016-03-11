@@ -4,5 +4,5 @@ using System.Collections;
 public class StageMechanics : MonoBehaviour {
 
 	public float stageFloor;
-
+	public bool isPlatform;
 }
