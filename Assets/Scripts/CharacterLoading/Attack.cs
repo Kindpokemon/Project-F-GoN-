@@ -31,12 +31,18 @@ public class Attack {
 		Consecutive
 	}
 	public SummonType summonType;
+	public bool leftBehind;
 
 	//For Multiattacks
 	public int maxPresses;
 	public int currentPresses;
 	public int finalDamage;
 	public bool[] flipped;
+	public bool infiniteHold;
+	public bool randomSummon;
+	public bool chargeSummon;
+	public int chargeSCount;
+	public int summonedAtFirst;
 
 	//If Stuns
 	public int maxStun;
